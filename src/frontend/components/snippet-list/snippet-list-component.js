@@ -23,27 +23,46 @@ class SnippetList extends HTMLElement {
 	}
 
 	render() {
+		const { setSnippetsNames, setSelectedSnippet } = STORE.getState();			
+		
+		// establecemos los valores en el estado
 		api.readDir()
 			.then(files => {
-				const { setSnippetsNames } = STORE.getState();			
-
-				// establecemos los valores en el estado
 				const fileNames = files.map(file => file.name);
 				setSnippetsNames(fileNames);
 			});
 
-		// listener
-		this.listenerFiles = STORE.subscribe(state => {    
+		
+		this.listenerFiles = STORE.subscribe(({ snippetNames }) => {    
 			
 			/** @type {HTMLDivElement | null} */
-			const container = document.querySelector('#snippetNames');
+			const container = this.querySelector('#snippetNames');
 			
-			if (!container || state.snippetNames.length === 0) return
+			if (!container || snippetNames.length === 0) return;
 			
+			// actualizamos la lista de nombres del snippet
 			container.innerHTML = '';
-			container.innerHTML += state.snippetNames.map(snippetName => (`
-				<div><h1>${snippetName}</h1></div>
+			container.innerHTML += snippetNames.map(snippetName => (`
+				<div class="snippetName py-2 px-4 hover:bg-neutral-900 hover:cursor-pointer">
+					<h1>${snippetName}</h1>
+				</div>
 			`)).join('');
+
+
+			// anadimos un evento por cada item y al hacer click actualizamos el estado
+			const listSnippetItem = Array.from(container.querySelectorAll('.snippetName'));
+			
+			listSnippetItem.forEach(snippetItem => {
+
+				snippetItem.addEventListener('click', () => {
+					const snippetElement = snippetItem.querySelector('h1');
+
+					if (!snippetElement) return;
+					
+					const snippetName = snippetElement.innerText; 
+					setSelectedSnippet(snippetName);
+				});
+			});
 		});
 	}
 

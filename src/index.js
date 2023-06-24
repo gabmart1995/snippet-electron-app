@@ -8,10 +8,10 @@ const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 1100,
 		height: 700,
+		title: 'Snippet Code App',
 		webPreferences: {
 			preload: join(__dirname, 'preload.js'),
 			contextIsolation: true,
-			// nodeIntegration: true,
 		},
 	});
 

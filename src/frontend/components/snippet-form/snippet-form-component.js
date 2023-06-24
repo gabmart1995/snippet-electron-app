@@ -23,7 +23,7 @@ class SnippetForm extends HTMLElement {
 	render() {
 		const form = this.querySelector('form');
 
-		if (!form) return
+		if (!form) return;
 		
 		form.addEventListener('submit', event => {
 			
