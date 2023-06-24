@@ -1,0 +1,34 @@
+
+<!-- created by create-app-cli -->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<base href="." />
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+		<title>Electron app</title>
+		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="css/utilities.css" />
+		<script src="assets/zustand.js"></script> <!-- biblioteca de manejo de estado -->
+		<script src="assets/monaco-editor/min/vs/loader.js"></script>
+	</head>
+	<body>
+		<div class="h-screen text-white grid grid-cols-12">
+			<div class="col-span-3 bg-zinc-950">
+				<snippet-form-component></snippet-form-component>
+				<snippet-list-component></snippet-list-component>
+			</div>
+			<div class="col-span-9 bg-neutral-950 flex justify-center items-center">
+				<!--<p>Snippet editor</p>-->
+				<editor-component class="w-100 h-100"></editor-component>
+			</div>
+			
+			<script src="store/snippet-store.js"></script>
+			<script src="components/snippet-form/snippet-form-component.js" defer></script>
+			<script src="components/snippet-list/snippet-list-component.js" defer></script>
+			<script src="components/editor/editor-component.js" defer></script>
+	</body>
+</html>
+	
