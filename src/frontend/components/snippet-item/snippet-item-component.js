@@ -28,19 +28,24 @@ class SnippetItem extends HTMLElement {
 	}
 
 	connectedCallback() {
-		const divElement = document.createElement('div');
-		divElement.className = 'snippetName bg-zinc-950 py-2 px-4 hover:bg-sky-500 hover:cursor-pointer';
+		fetch('components/snippet-item/snippet-item-component.html')
+			.then(response => response.text())
+			.then(text => {
+				this.innerHTML = text;
 
-		// evento click
-		divElement.addEventListener('click', () => this.dispatchSnippetName(this.name));
+				// eventos click
+				const divElement = this.querySelector('div.snippetName');
+				if (!divElement) return;
+				
+				divElement.addEventListener('click', () => this.dispatchSnippetName(this.name));
+				
+				const buttonDelete = this.querySelector('#delete-button');
+				if (!buttonDelete) return;
 
-		const titleElement = document.createElement('h1');
-		titleElement.innerText = this.name
-		
-		divElement.appendChild(titleElement);
-		this.appendChild(divElement);
+				buttonDelete.addEventListener('click', this.deleteSnippet.bind(this));
 
-		this.render();
+				this.render();
+			});
 	}
 
 	attributeChangedCallback( name, oldValue, newValue ) {
@@ -54,7 +59,7 @@ class SnippetItem extends HTMLElement {
 
 	render() {
 		const titleElement = this.querySelector('h1');
-		const divElement = this.querySelector('div');
+		const divElement = this.querySelector('div.snippetName');
 
 		if (!titleElement || !divElement) return;
 
@@ -66,11 +71,11 @@ class SnippetItem extends HTMLElement {
 		
 		} else {
 			divElement.classList.replace('bg-sky-500', 'bg-zinc-950');
+		
 		} 
 	}
 
-	async dispatchSnippetName(snippetName) {
-		
+	async dispatchSnippetName(snippetName) {	
 		// leemos el archivo
 		try {
 			const code = await api.readSnippet(snippetName);
@@ -91,7 +96,36 @@ class SnippetItem extends HTMLElement {
 		}
 	}
 
+	async deleteSnippet(event) {
+		event.stopPropagation();
+
+		const { removeSnippetName } = STORE.getState();
+		
+		const result = window.confirm('Are you sure you want to delete this snippet?');
+		if (!result) return;  
+
+		// borramos el snippet y actualizamos el estado
+		try {
+			await api.deleteSnippet(this.name);
+			removeSnippetName(this.name);
+
+		} catch (error) {
+			console.error(error);
+		
+		}
+	}
+
 	disconnectedCallback() {
+		
+		const divElement = this.querySelector('div.snippetName');
+		if (!divElement) return;
+		
+		divElement.removeEventListener('click', () => this.dispatchSnippetName(this.name));
+		
+		const buttonDelete = this.querySelector('#delete-button');
+		if (!buttonDelete) return;
+
+		buttonDelete.removeEventListener('click', this.deleteSnippet.bind(this));	
 	}
 }
 

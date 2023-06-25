@@ -60,13 +60,14 @@ class Editor extends HTMLElement {
 		
 		// nos subscribimos a selected snippet
 		this.editorListener = STORE.subscribe((state, prevState) => {
-			if (!this.container || state.selectedSnippet.name === prevState.selectedSnippet.name) return;
 			
-			if (state.selectedSnippet.length === 0) {
+			if (state.selectedSnippet.name.length === 0) {
 				this.container.innerHTML = '';
 				this.container.innerHTML = (`<h1>No snippet selected</h1>`);
 				return;
 			}
+
+			if (!this.container || state.selectedSnippet.name === prevState.selectedSnippet.name) return;
 			
 			// si el editor no existe limpia el contenedor y crea la instancia del editor
 			if (!this.editorInstance) {

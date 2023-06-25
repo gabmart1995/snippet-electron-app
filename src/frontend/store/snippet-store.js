@@ -8,7 +8,11 @@ const STORE = zustandVanilla.createStore((set) => {
         },
         addSnippetName: (name) => set(state => ({...state, snippetsName: [...state.snippetsName, name] })),
         setSnippetsNames: (names) => set({ snippetNames: names }),
-        setSelectedSnippet: (snippet) => set({ selectedSnippet: snippet })
+        setSelectedSnippet: (snippet) => set({ selectedSnippet: snippet }),
+        removeSnippetName: (name) => set(state => ({
+            ...state, 
+            snippetNames: state.snippetNames.filter(snippetName => snippetName !== name), 
+        })),
     }; 
 });
 

@@ -1,11 +1,13 @@
 const path = require('path');
 const { existsSync, promises: fsPromises } = require('fs'); // promises mode
 
-const { ipcMain } = require('electron');
+const { ipcMain, Notification } = require('electron');
 
 // path's
 const desktopPath = require('os').homedir();
 const pathDirectory = path.resolve(desktopPath, 'electronfiles'); 
+
+let notification = new Notification();
 
 // handlers
 ipcMain.handle('create-snippet', async (_, nameFile) => {
@@ -25,6 +27,10 @@ ipcMain.handle('create-snippet', async (_, nameFile) => {
     try {
         await fsPromises.writeFile(pathFile, '');
         
+        notification.title = 'Exito';
+        notification.body = 'Snippet creado con exito';
+        notification.show();
+
     } catch (error) {
         throw new Error('Error al crear archivo');
     }
@@ -53,7 +59,7 @@ ipcMain.handle('save-snippet', async (_, nameFile, content) => {
     
     try {
         await fsPromises.writeFile(pathFile, content);
-        console.log('save succesfully');
+        // console.log('save succesfully');
 
     } catch (error) {
         console.error(error);
@@ -61,7 +67,7 @@ ipcMain.handle('save-snippet', async (_, nameFile, content) => {
     }
 });
 
-ipcMain.handle('read-file', async (_, nameFile) => {
+ipcMain.handle('read-snippet', async (_, nameFile) => {
     const pathFile = path.resolve(pathDirectory, nameFile);
     
     try {
@@ -71,5 +77,14 @@ ipcMain.handle('read-file', async (_, nameFile) => {
         console.error(error);
     
     }
+});
+
+ipcMain.handle('delete-snippet', async (_, nameFile) => {
+    const pathFile = path.resolve(pathDirectory, nameFile);
+    await fsPromises.unlink(pathFile);
+   
+    notification.title = 'Exito';
+    notification.body = 'Snippet eliminado con exito';
+    notification.show();
 });
 
