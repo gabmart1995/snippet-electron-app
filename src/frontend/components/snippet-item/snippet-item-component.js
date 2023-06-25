@@ -1,3 +1,4 @@
+
 class SnippetItem extends HTMLElement {
 	constructor() {
 		super();
@@ -58,8 +59,8 @@ class SnippetItem extends HTMLElement {
 		if (!titleElement || !divElement) return;
 
 		titleElement.innerText = this.name;
-		
-		// selected file
+
+		// selected item style
 		if (this.name === this.snippet) {
 			divElement.classList.replace('bg-zinc-950', 'bg-sky-500');
 		

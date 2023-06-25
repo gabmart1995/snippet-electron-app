@@ -48,12 +48,6 @@ class SnippetList extends HTMLElement {
 
 			// actualizamos la lista de nombres del snippet
 			container.innerHTML = '';
-			/*container.innerHTML += state.snippetNames.map(snippetName => (`
-				<div class="snippetName bg-zing-900 py-2 px-4 hover:bg-sky-500 hover:cursor-pointer">
-					<h1>${snippetName}</h1>
-				</div>
-			`)).join('');*/
-
 			container.innerHTML += state.snippetNames.map(snippetName => (`
 				<snippet-item-component name="${snippetName}"></snippet-item-component>
 			`)).join('')

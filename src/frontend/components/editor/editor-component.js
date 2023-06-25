@@ -1,14 +1,9 @@
 class Editor extends HTMLElement {
 	constructor() {
 		super();
-		this.editor = undefined;
-		this.container = null;
+		this.editor = null;
 		this.editorListener = null;
-
-		// configuracion del require
-		require.config({ 
-			paths: { vs: 'assets/monaco-editor/min/vs' } 
-		});
+		this.container = null;
 	}
 
 	/* props observed */
@@ -33,6 +28,14 @@ class Editor extends HTMLElement {
 				language: 'javascript',
 				theme: 'vs-dark',
 				fontSize: 18,
+			});
+
+			// anadimos el evento de captura de teclado
+			this.container.addEventListener('keyup', event => {					
+				if (event.ctrlKey && event.key === 's') { // salva el archivo Ctrl + S 
+					const fileContent = this.editor.getValue(); 
+					console.log(fileContent);
+				}
 			});
 		});
 	}

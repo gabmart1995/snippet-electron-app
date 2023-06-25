@@ -13,6 +13,12 @@
 		<link rel="stylesheet" href="css/utilities.css" />
 		<script src="assets/zustand.js"></script> <!-- biblioteca de manejo de estado -->
 		<script src="assets/monaco-editor/min/vs/loader.js"></script>
+		<script>
+			// configuracion del require
+			require.config({ 
+				paths: { vs: 'assets/monaco-editor/min/vs' } 
+			});
+		</script>
 	</head>
 	<body>
 		<div class="h-screen text-white grid grid-cols-12">
