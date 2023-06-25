@@ -2,7 +2,10 @@
 const STORE = zustandVanilla.createStore((set) => {
     return {
         snippetNames: [],
-        selectedSnippet: '',
+        selectedSnippet: {
+            name: '',
+            code: ''
+        },
         addSnippetName: (name) => set(state => ({...state, snippetsName: [...state.snippetsName, name] })),
         setSnippetsNames: (names) => set({ snippetNames: names }),
         setSelectedSnippet: (snippet) => set({ selectedSnippet: snippet })

@@ -69,16 +69,26 @@ class SnippetItem extends HTMLElement {
 		} 
 	}
 
-	dispatchSnippetName(snippetName) {
-		const customEvent = new CustomEvent('snippet', {
-			bubbles: true,
-			cancelable: true,
-			detail: {
-				snippetName
-			}
-		});
+	async dispatchSnippetName(snippetName) {
+		
+		// leemos el archivo
+		try {
+			const code = await api.readSnippet(snippetName);
+			const customEvent = new CustomEvent('snippet', {
+				bubbles: true,
+				cancelable: true,
+				detail: {
+					name: snippetName,
+					code
+				},
+			});
+	
+			this.dispatchEvent(customEvent);
 
-		this.dispatchEvent(customEvent);
+		} catch (error) {
+			console.error(error);
+		
+		}
 	}
 
 	disconnectedCallback() {

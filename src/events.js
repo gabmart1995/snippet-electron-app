@@ -57,6 +57,19 @@ ipcMain.handle('save-snippet', async (_, nameFile, content) => {
 
     } catch (error) {
         console.error(error);
+    
     }
-
 });
+
+ipcMain.handle('read-file', async (_, nameFile) => {
+    const pathFile = path.resolve(pathDirectory, nameFile);
+    
+    try {
+        return await fsPromises.readFile(pathFile, { encoding: 'utf-8' });
+
+    } catch (error) {
+        console.error(error);
+    
+    }
+});
+

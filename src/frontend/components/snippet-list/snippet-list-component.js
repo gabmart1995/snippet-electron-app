@@ -56,13 +56,13 @@ class SnippetList extends HTMLElement {
 			listSnippetItem.forEach((snippetItem, _, items) => {			
 				
 				snippetItem.addEventListener('snippet', event => {
-					const { snippetName } = event.detail; 
-					setSelectedSnippet(snippetName);
+					const { name, code } = event.detail; 
+					setSelectedSnippet({name, code});
 
 					const { selectedSnippet } = STORE.getState();
-					snippetItem._selectedSnippet = selectedSnippet;
+					snippetItem._selectedSnippet = selectedSnippet.name;
 
-					this.changeOptionSelected(items, selectedSnippet);	
+					this.changeOptionSelected(items, selectedSnippet.name);	
 				});
 			});
 		});

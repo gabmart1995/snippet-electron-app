@@ -14,7 +14,7 @@ class SnippetForm extends HTMLElement {
 			.then(html => {
 				this.innerHTML = html;
 				this.render();
-			})
+			});
 	}
 
 	attributeChangedCallback( name, oldValue, newValue ) {
@@ -30,14 +30,17 @@ class SnippetForm extends HTMLElement {
 			
 			const formData = new FormData(form);
 			const fileName = formData.get('file-name').toString();
+			
+			// crea el archivo
 			api.createSnippet(fileName);
 
-			form.reset(); // limpia el formulario
+			// limpia el formulario
+			form.reset(); 
 
 			// actualizamos el estado
 			addSnippetName(fileName)
 
-			event.preventDefault(); // cancela el evento de envio
+			event.preventDefault(); 
 		});
 	}
 

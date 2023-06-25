@@ -30,21 +30,23 @@ class Editor extends HTMLElement {
 		}
 		
 	// configuramos require global para el path de monaco
-	createEditor(value = '', selectedSnippet) {
+	createEditor(value = '', selectedSnippetName) {
 		require(['vs/editor/editor.main'], () => {
 			this.editor = monaco.editor;
 			this.editorInstance = this.editor.create(this.container, {
 				value,
-				language: this.getLanguageEditor(selectedSnippet),
+				language: this.getLanguageEditor(selectedSnippetName),
 				theme: 'vs-dark',
 				fontSize: 18,
 			});
 			
 			// anadimos el evento de captura de teclado
-			this.container.addEventListener('keyup', event => {	
-				if (event.ctrlKey && event.key === 's') { // salva el archivo Ctrl + S 
-					selectedSnippet = STORE.getState().selectedSnippet;
-					api.saveSnippet(selectedSnippet, this.editorInstance.getValue());
+			this.container.addEventListener('keyup', event => {
+				
+				// salva el archivo Ctrl + S 	
+				if (event.ctrlKey && event.key === 's') { 
+					selectedSnippetName = STORE.getState().selectedSnippet.name;
+					api.saveSnippet(selectedSnippetName, this.editorInstance.getValue());
 				}
 			});
 		});
@@ -58,7 +60,7 @@ class Editor extends HTMLElement {
 		
 		// nos subscribimos a selected snippet
 		this.editorListener = STORE.subscribe((state, prevState) => {
-			if (!this.container || state.selectedSnippet === prevState.selectedSnippet) return;
+			if (!this.container || state.selectedSnippet.name === prevState.selectedSnippet.name) return;
 			
 			if (state.selectedSnippet.length === 0) {
 				this.container.innerHTML = '';
@@ -69,18 +71,18 @@ class Editor extends HTMLElement {
 			// si el editor no existe limpia el contenedor y crea la instancia del editor
 			if (!this.editorInstance) {
 				this.container.innerHTML = '';
-				this.createEditor('', state.selectedSnippet);
+				this.createEditor(state.selectedSnippet.code, state.selectedSnippet.name);
 				return
 			}
 			
 			// se cambia el modelo de lenguaje de programacion
 			this.editor.setModelLanguage(
 				this.editorInstance.getModel(), 
-				this.getLanguageEditor(state.selectedSnippet)
+				this.getLanguageEditor(state.selectedSnippet.name)
 			);
 
 			// incluye el contenido en el editor
-			this.editorInstance.setValue('');
+			this.editorInstance.setValue(state.selectedSnippet.code);
 		});	
 	}
 
