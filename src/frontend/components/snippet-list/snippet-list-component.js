@@ -33,37 +33,60 @@ class SnippetList extends HTMLElement {
 			});
 
 		
-		this.listenerFiles = STORE.subscribe(({ snippetNames }) => {    
+		// se subscribe unicamente a snippetNames
+		this.listenerFiles = STORE.subscribe((state, prevState) => {    
 			
 			/** @type {HTMLDivElement | null} */
 			const container = this.querySelector('#snippetNames');
 			
-			if (!container || snippetNames.length === 0) return;
+			if (!container || state.snippetNames.length === 0) return;
 			
+			// actualiza la lista si el estado y el anterior son diferentes
+			if (state.snippetNames === prevState.snippetNames) {
+				return;
+			}
+
 			// actualizamos la lista de nombres del snippet
 			container.innerHTML = '';
-			container.innerHTML += snippetNames.map(snippetName => (`
-				<div class="snippetName py-2 px-4 hover:bg-neutral-900 hover:cursor-pointer">
+			/*container.innerHTML += state.snippetNames.map(snippetName => (`
+				<div class="snippetName bg-zing-900 py-2 px-4 hover:bg-sky-500 hover:cursor-pointer">
 					<h1>${snippetName}</h1>
 				</div>
-			`)).join('');
+			`)).join('');*/
 
+			container.innerHTML += state.snippetNames.map(snippetName => (`
+				<snippet-item-component name="${snippetName}"></snippet-item-component>
+			`)).join('')
 
 			// anadimos un evento por cada item y al hacer click actualizamos el estado
-			const listSnippetItem = Array.from(container.querySelectorAll('.snippetName'));
+			const listSnippetItem = Array.from(container.querySelectorAll('snippet-item-component'));
 			
-			listSnippetItem.forEach(snippetItem => {
-
-				snippetItem.addEventListener('click', () => {
-					const snippetElement = snippetItem.querySelector('h1');
-
-					if (!snippetElement) return;
-					
-					const snippetName = snippetElement.innerText; 
+			listSnippetItem.forEach((snippetItem, _, items) => {			
+				
+				snippetItem.addEventListener('snippet', event => {
+					const { snippetName } = event.detail; 
 					setSelectedSnippet(snippetName);
+
+					const { selectedSnippet } = STORE.getState();
+					snippetItem._selectedSnippet = selectedSnippet;
+
+					this.changeOptionSelected(items, selectedSnippet);	
 				});
 			});
 		});
+	}
+
+	changeOptionSelected(items, selectedSnippet) {
+		items
+			.map(item => ({
+				element: item,
+				snippetName: item._name
+			}))
+			.forEach(item => {	
+				if (item.snippetName !== selectedSnippet) {
+					item.element._selectedSnippet = '';
+				}
+			});
 	}
 
 	disconnectedCallback() {

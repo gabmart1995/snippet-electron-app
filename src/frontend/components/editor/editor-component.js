@@ -33,7 +33,7 @@ class Editor extends HTMLElement {
 				language: 'javascript',
 				theme: 'vs-dark',
 				fontSize: 18,
-			});			
+			});
 		});
 	}
 	
@@ -44,11 +44,13 @@ class Editor extends HTMLElement {
 		this.container = this.querySelector('#container');
 		
 		// nos subscribimos a selected snippet
-		this.editorListener = STORE.subscribe(({ selectedSnippet }) => {
+		this.editorListener = STORE.subscribe((state, prevState) => {
 			
-			if (!this.container) return;
+			// console.log({ state, prevState });
+
+			if (!this.container || state.selectedSnippet === prevState.selectedSnippet) return;
 			
-			if (selectedSnippet.length === 0) {
+			if (state.selectedSnippet.length === 0) {
 				this.container.innerHTML = '';
 				this.container.innerHTML = (`<h1>No snippet selected</h1>`);
 				return;
@@ -57,12 +59,12 @@ class Editor extends HTMLElement {
 			// si el editor no existe limpia el contenedor y crea la instancia del editor
 			if (!this.editor) {
 				this.container.innerHTML = '';
-				this.createEditor('hello world');
+				this.createEditor('');
 				return
 			}
 			
 			// se actualiza el valor del editor
-			this.editor.setValue('prueba');
+			this.editor.setValue('');
 		});	
 	}
 
