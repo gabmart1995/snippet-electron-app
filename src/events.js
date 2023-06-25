@@ -60,6 +60,10 @@ ipcMain.handle('save-snippet', async (_, nameFile, content) => {
     try {
         await fsPromises.writeFile(pathFile, content);
 
+        notification.title = 'Exito';
+        notification.body = 'Snippet guardado';
+        notification.show();
+
     } catch (error) {
         console.error(error);
     

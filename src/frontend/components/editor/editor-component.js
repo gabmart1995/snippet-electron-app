@@ -45,6 +45,7 @@ class Editor extends HTMLElement {
 				
 				// salva el archivo Ctrl + S 	
 				if (event.ctrlKey && event.key === 's') { 
+					console.log('saved');
 					selectedSnippetName = STORE.getState().selectedSnippet.name;
 					api.saveSnippet(selectedSnippetName, this.editorInstance.getValue());
 				}

@@ -25,7 +25,7 @@
         },
         {
           "config": {
-            "name": "electron-example-app"
+            "name": "snippet-app"
           },
           "name": "@electron-forge/maker-squirrel"
         },

@@ -39,14 +39,24 @@ class SnippetList extends HTMLElement {
 			/** @type {HTMLDivElement | null} */
 			const container = this.querySelector('#snippetNames');
 			
-			if (!container || state.snippetNames.length === 0) return;
-			
+			if (!container) return;
+
 			// actualiza la lista si el estado y el anterior son diferentes
 			if (state.snippetNames === prevState.snippetNames) return;
 
+			// si no existen snippets muesta el contenido
+			if (state.snippetNames.length === 0) {
+				container.innerHTML = (`
+					<div class="snippetName bg-zinc-950 py-2 px-4">
+						<h1>No snippets</h1>
+					</div>
+				`);
+
+				return;
+			}
+
 			// actualizamos la lista de nombres del snippet
-			container.innerHTML = '';
-			container.innerHTML += state.snippetNames.map(snippetName => (`
+			container.innerHTML = state.snippetNames.map(snippetName => (`
 				<snippet-item-component name="${snippetName}"></snippet-item-component>
 			`)).join('')
 
