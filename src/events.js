@@ -59,7 +59,6 @@ ipcMain.handle('save-snippet', async (_, nameFile, content) => {
     
     try {
         await fsPromises.writeFile(pathFile, content);
-        // console.log('save succesfully');
 
     } catch (error) {
         console.error(error);
@@ -81,10 +80,17 @@ ipcMain.handle('read-snippet', async (_, nameFile) => {
 
 ipcMain.handle('delete-snippet', async (_, nameFile) => {
     const pathFile = path.resolve(pathDirectory, nameFile);
-    await fsPromises.unlink(pathFile);
-   
-    notification.title = 'Exito';
-    notification.body = 'Snippet eliminado con exito';
-    notification.show();
+    
+    try {
+        await fsPromises.unlink(pathFile);
+        
+        notification.title = 'Exito';
+        notification.body = 'Snippet eliminado con exito';
+        notification.show();
+        
+    } catch (error) {
+        console.error(error);
+
+    }
 });
 
