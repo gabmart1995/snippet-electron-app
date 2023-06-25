@@ -1,9 +1,18 @@
+
 class Editor extends HTMLElement {
 	constructor() {
 		super();
 		this.editor = null;
 		this.editorListener = null;
 		this.container = null;
+		this.EXTENSIONS = Object.freeze({
+			js: 'js',
+			ts: 'ts',
+			css: 'css',
+			html: 'html',
+			json: 'json',
+			py: 'py'
+		});
 	}
 
 	/* props observed */
@@ -21,20 +30,21 @@ class Editor extends HTMLElement {
 		}
 		
 	// configuramos require global para el path de monaco
-	createEditor(value = '') {
+	createEditor(value = '', selectedSnippet) {
 		require(['vs/editor/editor.main'], () => {
-			this.editor = monaco.editor.create(this.container, {
+			this.editor = monaco.editor;
+			this.editorInstance = this.editor.create(this.container, {
 				value,
-				language: 'javascript',
+				language: this.getLanguageEditor(selectedSnippet),
 				theme: 'vs-dark',
 				fontSize: 18,
 			});
-
+			
 			// anadimos el evento de captura de teclado
-			this.container.addEventListener('keyup', event => {					
+			this.container.addEventListener('keyup', event => {	
 				if (event.ctrlKey && event.key === 's') { // salva el archivo Ctrl + S 
-					const fileContent = this.editor.getValue(); 
-					console.log(fileContent);
+					selectedSnippet = STORE.getState().selectedSnippet;
+					api.saveSnippet(selectedSnippet, this.editorInstance.getValue());
 				}
 			});
 		});
@@ -48,9 +58,6 @@ class Editor extends HTMLElement {
 		
 		// nos subscribimos a selected snippet
 		this.editorListener = STORE.subscribe((state, prevState) => {
-			
-			// console.log({ state, prevState });
-
 			if (!this.container || state.selectedSnippet === prevState.selectedSnippet) return;
 			
 			if (state.selectedSnippet.length === 0) {
@@ -60,15 +67,48 @@ class Editor extends HTMLElement {
 			}
 			
 			// si el editor no existe limpia el contenedor y crea la instancia del editor
-			if (!this.editor) {
+			if (!this.editorInstance) {
 				this.container.innerHTML = '';
-				this.createEditor('');
+				this.createEditor('', state.selectedSnippet);
 				return
 			}
 			
-			// se actualiza el valor del editor
-			this.editor.setValue('');
+			// se cambia el modelo de lenguaje de programacion
+			this.editor.setModelLanguage(
+				this.editorInstance.getModel(), 
+				this.getLanguageEditor(state.selectedSnippet)
+			);
+
+			// incluye el contenido en el editor
+			this.editorInstance.setValue('');
 		});	
+	}
+
+	getLanguageEditor(snippetName = '') {
+		const extension = snippetName.split('.')[snippetName.split('.').length - 1];
+		
+		switch (extension) {
+			case this.EXTENSIONS.js:
+				return 'javascript';
+
+			case this.EXTENSIONS.ts:
+				return 'typescript';
+			
+			case this.EXTENSIONS.html:
+				return this.EXTENSIONS.html;
+
+			case this.EXTENSIONS.css:
+				return this.EXTENSIONS.css;
+
+			case this.EXTENSIONS.json:
+				return this.EXTENSIONS.json;
+
+			case this.EXTENSIONS.py:
+				return 'python';
+
+			default:
+				return 'txt';
+		}
 	}
 
 	disconnectedCallback() {
@@ -77,4 +117,3 @@ class Editor extends HTMLElement {
 }
 
 customElements.define('editor-component', Editor);
-	

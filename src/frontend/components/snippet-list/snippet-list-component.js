@@ -42,9 +42,7 @@ class SnippetList extends HTMLElement {
 			if (!container || state.snippetNames.length === 0) return;
 			
 			// actualiza la lista si el estado y el anterior son diferentes
-			if (state.snippetNames === prevState.snippetNames) {
-				return;
-			}
+			if (state.snippetNames === prevState.snippetNames) return;
 
 			// actualizamos la lista de nombres del snippet
 			container.innerHTML = '';

@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-
 contextBridge.exposeInMainWorld('api', {
     createSnippet: async (nameFile) => await ipcRenderer.invoke('create-snippet', nameFile),
     readDir: async () => {
@@ -12,4 +11,5 @@ contextBridge.exposeInMainWorld('api', {
 
         }
     },
+    saveSnippet: async (nameFile, content) => await ipcRenderer.invoke('save-snippet', nameFile, content), 
 });

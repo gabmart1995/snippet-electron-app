@@ -23,7 +23,7 @@ ipcMain.handle('create-snippet', async (_, nameFile) => {
 
     // escribimos el archivo
     try {
-        await fsPromises.writeFile(pathFile, '{}');
+        await fsPromises.writeFile(pathFile, '');
         
     } catch (error) {
         throw new Error('Error al crear archivo');
@@ -46,4 +46,17 @@ ipcMain.handle('read-dir', async () => {
     } catch (error) {
         console.error(error);
     }
+});
+
+ipcMain.handle('save-snippet', async (_, nameFile, content) => {
+    const pathFile = path.resolve(pathDirectory, nameFile);
+    
+    try {
+        await fsPromises.writeFile(pathFile, content);
+        console.log('save succesfully');
+
+    } catch (error) {
+        console.error(error);
+    }
+
 });

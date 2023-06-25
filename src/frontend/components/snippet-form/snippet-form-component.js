@@ -21,6 +21,7 @@ class SnippetForm extends HTMLElement {
 	}
 
 	render() {
+		const { addSnippetName } = STORE.getState();
 		const form = this.querySelector('form');
 
 		if (!form) return;
@@ -28,10 +29,14 @@ class SnippetForm extends HTMLElement {
 		form.addEventListener('submit', event => {
 			
 			const formData = new FormData(form);
-			
-			api.createSnippet(`${formData.get('file-name')}.json`);
-			
+			const fileName = formData.get('file-name').toString();
+			api.createSnippet(fileName);
+
 			form.reset(); // limpia el formulario
+
+			// actualizamos el estado
+			addSnippetName(fileName)
+
 			event.preventDefault(); // cancela el evento de envio
 		});
 	}
