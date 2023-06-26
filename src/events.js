@@ -37,6 +37,17 @@ ipcMain.handle('create-snippet', async (_, nameFile) => {
 });  
 
 ipcMain.handle('read-dir', async () => { 
+    
+    if (!existsSync(pathDirectory)) { // verifica si no existe la carpeta
+        try {
+            await fsPromises.mkdir(pathDirectory);
+            
+        } catch (error) {
+            throw new Error('Error de permisos de escritura');
+        
+        }
+    }
+    
     try {
         const files = await fsPromises.readdir(pathDirectory);
 
