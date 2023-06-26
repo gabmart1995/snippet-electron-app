@@ -21,7 +21,10 @@ class SnippetForm extends HTMLElement {
 	}
 
 	render() {
+		
+		/** @type {State} */
 		const { addSnippetName } = STORE.getState();
+
 		const form = this.querySelector('form');
 
 		if (!form) return;

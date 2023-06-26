@@ -23,6 +23,7 @@ class SnippetList extends HTMLElement {
 	}
 
 	render() {
+		/** @type {State} */
 		const { setSnippetsNames, setSelectedSnippet } = STORE.getState();			
 		
 		// establecemos los valores en el estado
@@ -69,6 +70,7 @@ class SnippetList extends HTMLElement {
 					const { name, code } = event.detail; 
 					setSelectedSnippet({name, code});
 
+					/** @type {State} */
 					const { selectedSnippet } = STORE.getState();
 					snippetItem._selectedSnippet = selectedSnippet.name;
 
@@ -78,6 +80,11 @@ class SnippetList extends HTMLElement {
 		});
 	}
 
+	/**
+	 * Actualiza la opcion seleccionada en el menu principal
+	 * @param {Array<Element>} items - elementos HTML
+	 * @param {string} selectedSnippet - nombre del snippet seleccionado 
+	 */
 	changeOptionSelected(items, selectedSnippet) {
 		items
 			.map(item => ({

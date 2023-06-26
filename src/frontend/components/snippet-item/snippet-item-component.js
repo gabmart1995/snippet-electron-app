@@ -99,6 +99,7 @@ class SnippetItem extends HTMLElement {
 	async deleteSnippet(event) {
 		event.stopPropagation();
 
+		/** @type {State} */
 		const { removeSnippetName } = STORE.getState();
 		
 		const result = window.confirm('Are you sure you want to delete this snippet?');
