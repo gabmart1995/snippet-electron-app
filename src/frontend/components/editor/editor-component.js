@@ -28,9 +28,15 @@ class Editor extends HTMLElement {
 				this.render();
 			})
 		}
+	
+	/**
+	 * crea una instancia del editor
+	 * @param {string} value codigo del snippet
+	 * @param {string} selectedSnippetName nombre del snippet
+	 */
+	createEditor(value, selectedSnippetName) {
 		
-	// configuramos require global para el path de monaco
-	createEditor(value = '', selectedSnippetName) {
+		// configuramos require global para el path de monaco
 		require(['vs/editor/editor.main'], () => {
 			this.editor = monaco.editor;
 			this.editorInstance = this.editor.create(this.container, {
@@ -45,7 +51,7 @@ class Editor extends HTMLElement {
 				
 				// salva el archivo Ctrl + S 	
 				if (event.ctrlKey && event.key === 's') { 
-					console.log('saved');
+					// console.log('saved');
 					selectedSnippetName = STORE.getState().selectedSnippet.name;
 					api.saveSnippet(selectedSnippetName, this.editorInstance.getValue());
 				}
@@ -88,7 +94,12 @@ class Editor extends HTMLElement {
 		});	
 	}
 
-	getLanguageEditor(snippetName = '') {
+	/**
+	 * Obtiene el lenguaje de programacion a trabajar
+	 * @param {string} [snippetName] nombre del snippet 
+	 * @returns {'javascript'|'typescript'|'html'|'css'|'python'|'txt'}
+	 */
+	getLanguageEditor(snippetName) {
 		const extension = snippetName.split('.')[snippetName.split('.').length - 1];
 		
 		switch (extension) {
